@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd">
+    <!--注册中心,server-lists表示zookeeper地址,可以是集群的方式 -->
+    <reg:zookeeper id="regCenter" server-lists="127.0.0.1:2181" namespace="study-elastic-job" base-sleep-time-milliseconds="1000" max-sleep-time-milliseconds="3000" max-retries="3" />
+
+    <!-- 定义任务,这个任务会在zookeeper中存放持久化的节点 -->
+    <job:simple id="userUpdateJob" registry-center-ref="regCenter" class="com.rao.study.elasticjob.elasticjob.UserUpdateJob" cron="* * * * * ?" sharding-total-count="1" sharding-item-parameters="0=0" disabled="false" description="" monitor-execution="false" monitor-port="9888" failover="true" />
+
+    <job:simple id="loanApplicationJob" class="com.rao.study.elasticjob.elasticjob.LoanApplicationJob" registry-center-ref="regCenter" cron="5/10 * * * * ?" sharding-total-count="1" sharding-item-parameters="0=0" disabled="false" description="" monitor-execution="false" monitor-port="9888" failover="true" />
+
+</beans>
